@@ -1,8 +1,6 @@
-import streamlit as st
 import pandas as pd
 import plotly_express as px
-from datashader.datashape import numeric
-from intake.source.utils import unique_string
+import streamlit as st
 
 
 @st.cache_data
@@ -45,5 +43,24 @@ feature_selection = st.sidebar.multiselect(label="Features to plot", options=num
 # Add a select box for stock tickers
 stock_ticker = st.sidebar.selectbox(label="Stock Ticker", options=unique_stocks)
 
-print(feature_selection)
-print(stock_ticker)
+# print(feature_selection)
+# print(stock_ticker)
+
+# index the dataframe based on the selected stock ticker
+
+stock_df = df[df["Name"] == stock_ticker]
+
+try:
+    # Plotly express line chart
+    plotly_figure = px.line(
+        data_frame=stock_df,
+        x=stock_df.index,
+        y=feature_selection,
+        title="Time line of " + str(stock_ticker) + " prices."
+    )
+
+    # Visualize the chart
+
+    st.plotly_chart(plotly_figure)
+except exception as e:
+    print(e)
